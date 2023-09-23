@@ -1,18 +1,23 @@
-use crate::ppm_writer::write_image;
-
-mod ppm_writer;
-
 fn main() {
-    println!("Hello, world!");
+    let image_width = 256;
+    let image_height = 256;
 
-    let data = vec![
-        (255, 0, 0),
-        (0, 255, 0),
-        (0, 0, 255),
-        (255, 255, 0),
-        (255, 255, 255),
-        (0, 0, 0),
-    ];
+    print!("P3\n{} {}\n255\n", image_width, image_height);
 
-    write_image("test.ppm", 2, 3, data).expect("Failed to write image");
+    for j in 0..image_height {
+        eprintln!("\rScanlines remaining: {}", image_height - j);
+        for i in 0..image_width {
+            let r = i as f64 / (image_width - 1) as f64;
+            let g = j as f64 / (image_height - 1) as f64;
+            let b = 0.0;
+
+            let ir = (255.999 * r) as u8;
+            let ig = (255.999 * g) as u8;
+            let ib = (255.999 * b) as u8;
+
+            print!("{} {} {}\n", ir, ig, ib);
+        }
+    }
+
+    eprintln!("Done.");
 }
