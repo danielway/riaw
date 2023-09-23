@@ -191,6 +191,54 @@ impl Div<f64> for Vec3 {
     }
 }
 
+impl Add<u32> for Vec3 {
+    type Output = Self;
+
+    fn add(self, scalar: u32) -> Self {
+        Self {
+            x: self.x + scalar as f64,
+            y: self.y + scalar as f64,
+            z: self.z + scalar as f64,
+        }
+    }
+}
+
+impl Sub<u32> for Vec3 {
+    type Output = Self;
+
+    fn sub(self, scalar: u32) -> Self {
+        Self {
+            x: self.x - scalar as f64,
+            y: self.y - scalar as f64,
+            z: self.z - scalar as f64,
+        }
+    }
+}
+
+impl Mul<u32> for Vec3 {
+    type Output = Self;
+
+    fn mul(self, scalar: u32) -> Self {
+        Self {
+            x: self.x * scalar as f64,
+            y: self.y * scalar as f64,
+            z: self.z * scalar as f64,
+        }
+    }
+}
+
+impl Div<u32> for Vec3 {
+    type Output = Self;
+
+    fn div(self, scalar: u32) -> Self {
+        Self {
+            x: self.x / scalar as f64,
+            y: self.y / scalar as f64,
+            z: self.z / scalar as f64,
+        }
+    }
+}
+
 impl Neg for Vec3 {
     type Output = Self;
 
