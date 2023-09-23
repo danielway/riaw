@@ -1,3 +1,4 @@
+use rand::random;
 use crate::camera::Camera;
 use crate::hittable_list::HittableList;
 use crate::vec3::Point3;
@@ -10,6 +11,7 @@ mod sphere;
 mod hittable_list;
 mod interval;
 mod camera;
+mod utility;
 
 fn main() {
     let mut world = HittableList::new();
