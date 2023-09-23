@@ -48,6 +48,9 @@ impl Hittable for Sphere {
         record.point = ray.at(root);
         record.normal = (record.point - self.center()) / self.radius();
 
+        let outward_normal = (record.point - self.center()) / self.radius();
+        record.set_face_normal(ray, outward_normal);
+
         true
     }
 }
