@@ -35,18 +35,18 @@ impl Camera {
         let viewport_width = aspect_ratio * viewport_height;
         let center = Point3::new(0.0, 0.0, 0.0);
 
-        let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-        let vertical = Vec3::new(0.0, -viewport_height, 0.0);
+        let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
+        let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
 
-        let pixel_delta_x = horizontal / image_width;
-        let pixel_delta_y = vertical / image_height;
+        let pixel_delta_u = viewport_u / image_width;
+        let pixel_delta_v = viewport_v / image_height;
 
         let viewport_upper_left = center
             - Vec3::new(0.0, 0.0, focal_length)
-            - horizontal / 2.0
-            - vertical / 2.0;
+            - viewport_u / 2.0
+            - viewport_v / 2.0;
 
-        let pixel00_location = viewport_upper_left + (pixel_delta_x + pixel_delta_y) * 0.5;
+        let pixel00_location = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5;
 
         Self {
             aspect_ratio,
@@ -54,8 +54,8 @@ impl Camera {
             image_height,
             center,
             pixel00_location,
-            pixel_delta_x,
-            pixel_delta_y,
+            pixel_delta_x: pixel_delta_u,
+            pixel_delta_y: pixel_delta_v,
             samples_per_pixel,
             max_depth,
             vfov,
