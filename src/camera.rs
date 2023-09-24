@@ -2,7 +2,7 @@ use crate::color::Color;
 use crate::hittable::{HitRecord, Hittable};
 use crate::interval::Interval;
 use crate::ray::Ray;
-use crate::utility::random_double;
+use crate::utility::{degrees_to_radians, random_double};
 use crate::vec3::{Point3, Vec3};
 
 pub struct Camera {
@@ -15,6 +15,7 @@ pub struct Camera {
     pixel_delta_y: Vec3,
     samples_per_pixel: u32,
     max_depth: u32,
+    vfov: f64,
 }
 
 impl Camera {
@@ -23,11 +24,14 @@ impl Camera {
         image_width: u32,
         samples_per_pixel: u32,
         max_depth: u32,
+        vfov: f64,
     ) -> Self {
         let image_height = (image_width as f64 / aspect_ratio) as u32;
 
         let focal_length = 1.0;
-        let viewport_height = 2.0;
+        let theta = degrees_to_radians(vfov);
+        let h = (theta / 2.0).tan();
+        let viewport_height = 2.0 * h * focal_length;
         let viewport_width = aspect_ratio * viewport_height;
         let center = Point3::new(0.0, 0.0, 0.0);
 
@@ -54,6 +58,7 @@ impl Camera {
             pixel_delta_y,
             samples_per_pixel,
             max_depth,
+            vfov,
         }
     }
 
