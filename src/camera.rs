@@ -51,10 +51,7 @@ impl Camera {
         let pixel_delta_u = viewport_u / image_width;
         let pixel_delta_v = viewport_v / image_height;
 
-        let viewport_upper_left = center
-            - (w * focus_dist)
-            - viewport_u / 2.0
-            - viewport_v / 2.0;
+        let viewport_upper_left = center - (w * focus_dist) - viewport_u / 2.0 - viewport_v / 2.0;
 
         let pixel00_location = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5;
 
@@ -131,7 +128,10 @@ fn ray_color(r: Ray, depth: u32, world: &dyn Hittable) -> Color {
     if world.hit(r, Interval::new(0.001, f64::INFINITY), &mut rec) {
         let mut scattered = Ray::default();
         let mut attenuation = Color::default();
-        if rec.material.scatter(&r, &rec, &mut attenuation, &mut scattered) {
+        if rec
+            .material
+            .scatter(&r, &rec, &mut attenuation, &mut scattered)
+        {
             return ray_color(scattered, depth - 1, world) * attenuation;
         }
 

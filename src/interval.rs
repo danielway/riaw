@@ -10,11 +10,17 @@ impl Interval {
     }
 
     pub fn empty() -> Self {
-        Self { min: f64::INFINITY, max: f64::NEG_INFINITY }
+        Self {
+            min: f64::INFINITY,
+            max: f64::NEG_INFINITY,
+        }
     }
 
     pub fn universe() -> Self {
-        Self { min: f64::NEG_INFINITY, max: f64::INFINITY }
+        Self {
+            min: f64::NEG_INFINITY,
+            max: f64::INFINITY,
+        }
     }
 
     pub fn min(self) -> f64 {

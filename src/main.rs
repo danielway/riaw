@@ -5,22 +5,26 @@ use crate::material::Material;
 use crate::utility::{random_double, random_double_range};
 use crate::vec3::{Point3, Vec3};
 
-mod vec3;
+mod camera;
 mod color;
-mod ray;
 mod hittable;
-mod sphere;
 mod hittable_list;
 mod interval;
-mod camera;
-mod utility;
 mod material;
+mod ray;
+mod sphere;
+mod utility;
+mod vec3;
 
 fn main() {
     let mut world = HittableList::new();
 
     let ground_material = Material::Lambertian(Color::new(0.5, 0.5, 0.5));
-    world.add(sphere::Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, ground_material));
+    world.add(sphere::Sphere::new(
+        Point3::new(0.0, -1000.0, 0.0),
+        1000.0,
+        ground_material,
+    ));
 
     for a in -11..11 {
         for b in -11..11 {
@@ -49,13 +53,25 @@ fn main() {
     }
 
     let material1 = Material::Dielectric(1.5);
-    world.add(sphere::Sphere::new(Point3::new(0.0, 1.0, 0.0), 1.0, material1));
+    world.add(sphere::Sphere::new(
+        Point3::new(0.0, 1.0, 0.0),
+        1.0,
+        material1,
+    ));
 
     let material2 = Material::Lambertian(Color::new(0.4, 0.2, 0.1));
-    world.add(sphere::Sphere::new(Point3::new(-4.0, 1.0, 0.0), 1.0, material2));
+    world.add(sphere::Sphere::new(
+        Point3::new(-4.0, 1.0, 0.0),
+        1.0,
+        material2,
+    ));
 
     let material3 = Material::Metal(Color::new(0.7, 0.6, 0.5), 0.0);
-    world.add(sphere::Sphere::new(Point3::new(4.0, 1.0, 0.0), 1.0, material3));
+    world.add(sphere::Sphere::new(
+        Point3::new(4.0, 1.0, 0.0),
+        1.0,
+        material3,
+    ));
 
     let camera = Camera::new(
         16.0 / 9.0,
