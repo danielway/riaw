@@ -6,7 +6,6 @@ use crate::utility::{degrees_to_radians, random_double};
 use crate::vec3::{Point3, Vec3};
 
 pub struct Camera {
-    aspect_ratio: f64,
     image_width: u32,
     image_height: u32,
     center: Point3,
@@ -15,7 +14,6 @@ pub struct Camera {
     pixel_delta_y: Vec3,
     samples_per_pixel: u32,
     max_depth: u32,
-    vfov: f64,
 }
 
 impl Camera {
@@ -32,7 +30,7 @@ impl Camera {
         let theta = degrees_to_radians(vfov);
         let h = (theta / 2.0).tan();
         let viewport_height = 2.0 * h * focal_length;
-        let viewport_width = aspect_ratio * viewport_height;
+        let viewport_width = (image_width as f64 / image_height as f64) * viewport_height;
         let center = Point3::new(0.0, 0.0, 0.0);
 
         let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
@@ -49,7 +47,6 @@ impl Camera {
         let pixel00_location = viewport_upper_left + (pixel_delta_u + pixel_delta_v) * 0.5;
 
         Self {
-            aspect_ratio,
             image_width,
             image_height,
             center,
@@ -58,7 +55,6 @@ impl Camera {
             pixel_delta_y: pixel_delta_v,
             samples_per_pixel,
             max_depth,
-            vfov,
         }
     }
 
