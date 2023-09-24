@@ -14,6 +14,10 @@ impl Color {
         g *= scale;
         b *= scale;
 
+        r = linear_to_gamma_2(r);
+        g = linear_to_gamma_2(g);
+        b = linear_to_gamma_2(b);
+
         let intensity = Interval::new(0.000, 0.999);
         println!(
             "{} {} {}",
@@ -22,4 +26,8 @@ impl Color {
             (256.0 * intensity.clamp(b)) as u32
         );
     }
+}
+
+fn linear_to_gamma_2(x: f64) -> f64 {
+    x.sqrt()
 }
