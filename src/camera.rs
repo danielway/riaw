@@ -37,8 +37,14 @@ impl Camera {
         let viewport_height = 2.0 * h * focal_length;
         let viewport_width = (image_width as f64 / image_height as f64) * viewport_height;
 
-        let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
-        let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
+        let w = (look_from - look_to).unit_vector();
+
+        // todo: these (-1,1,1) and (1,-1,1) should not be needed
+        let u = vup.cross(w).unit_vector() * Vec3::new(-1.0, 1.0, 1.0);
+        let v = w.cross(u) * Vec3::new(1.0, -1.0, 1.0);
+
+        let viewport_u = u * viewport_width;
+        let viewport_v = -v * viewport_height;
 
         let pixel_delta_u = viewport_u / image_width;
         let pixel_delta_v = viewport_v / image_height;
