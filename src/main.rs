@@ -2,7 +2,7 @@ use crate::camera::Camera;
 use crate::color::Color;
 use crate::hittable_list::HittableList;
 use crate::material::Material;
-use crate::vec3::Point3;
+use crate::vec3::{Point3, Vec3};
 
 mod vec3;
 mod color;
@@ -43,6 +43,9 @@ fn main() {
         100,
         50,
         90.0,
+        Point3::new(0.0, 0.0, 0.0),
+        Point3::new(0.0, 0.0, 1.0),
+        Vec3::new(0.0, 1.0, 0.0),
     );
     camera.render(&world);
 }

@@ -23,6 +23,9 @@ impl Camera {
         samples_per_pixel: u32,
         max_depth: u32,
         vfov: f64,
+        look_from: Point3,
+        look_to: Point3,
+        vup: Vec3,
     ) -> Self {
         let image_height = (image_width as f64 / aspect_ratio) as u32;
 
