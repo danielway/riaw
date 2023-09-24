@@ -3,7 +3,7 @@ use crate::utility::{random_double, random_double_range};
 
 pub type Point3 = Vec3;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Vec3 {
     x: f64,
     y: f64,
@@ -57,6 +57,10 @@ impl Vec3 {
         }
     }
 
+    pub fn reflect(self, normal: Self) -> Self {
+        self - normal * self.dot(normal) * 2.0
+    }
+
     pub fn x(self) -> f64 {
         self.x
     }
@@ -71,6 +75,11 @@ impl Vec3 {
 
     pub fn length_squared(self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
+    pub fn near_zero(self) -> bool {
+        const S: f64 = 1e-8;
+        self.x.abs() < S && self.y.abs() < S && self.z.abs() < S
     }
 
     pub fn length(self) -> f64 {

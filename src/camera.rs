@@ -99,8 +99,13 @@ fn ray_color(r: Ray, depth: u32, world: &dyn Hittable) -> Color {
 
     let mut rec = HitRecord::default();
     if world.hit(r, Interval::new(0.001, f64::INFINITY), &mut rec) {
-        let direction = rec.normal + Vec3::random_unit_vector();
-        return ray_color(Ray::new(rec.point, direction), depth - 1, world) * 0.5;
+        let mut scattered = Ray::default();
+        let mut attenuation = Color::default();
+        if rec.material.scatter(&r, &rec, &mut attenuation, &mut scattered) {
+            return ray_color(scattered, depth - 1, world) * attenuation;
+        }
+
+        return Color::zero();
     }
 
     let unit_direction = r.direction().unit_vector();
