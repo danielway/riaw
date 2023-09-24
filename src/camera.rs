@@ -14,10 +14,16 @@ pub struct Camera {
     pixel_delta_x: Vec3,
     pixel_delta_y: Vec3,
     samples_per_pixel: u32,
+    max_depth: u32,
 }
 
 impl Camera {
-    pub fn new(aspect_ratio: f64, image_width: u32, samples_per_pixel: u32) -> Self {
+    pub fn new(
+        aspect_ratio: f64,
+        image_width: u32,
+        samples_per_pixel: u32,
+        max_depth: u32,
+    ) -> Self {
         let image_height = (image_width as f64 / aspect_ratio) as u32;
 
         let focal_length = 1.0;
@@ -47,6 +53,7 @@ impl Camera {
             pixel_delta_x,
             pixel_delta_y,
             samples_per_pixel,
+            max_depth,
         }
     }
 
@@ -59,7 +66,7 @@ impl Camera {
                 let mut pixel_color = Color::new(0.0, 0.0, 0.0);
                 for _ in 0..self.samples_per_pixel {
                     let ray = self.get_ray(i, j);
-                    pixel_color += self.ray_color(ray, world);
+                    pixel_color += ray_color(ray, self.max_depth, world);
                 }
                 pixel_color.write_color(self.samples_per_pixel);
             }
@@ -83,15 +90,20 @@ impl Camera {
         let py = -0.5 + random_double();
         self.pixel_delta_x * px + self.pixel_delta_y * py
     }
+}
 
-    fn ray_color(&self, r: Ray, world: &dyn Hittable) -> Color {
-        let mut rec = HitRecord::default();
-        if world.hit(r, Interval::new(0.0, f64::INFINITY), &mut rec) {
-            return (rec.normal + Vec3::new(1.0, 1.0, 1.0)) * 0.5;
-        }
-
-        let unit_direction = r.direction().unit_vector();
-        let t = 0.5 * (unit_direction.y() + 1.0);
-        Color::new(1.0, 1.0, 1.0) * (1.0 - t) + Color::new(0.5, 0.7, 1.0) * t
+fn ray_color(r: Ray, depth: u32, world: &dyn Hittable) -> Color {
+    if depth <= 0 {
+        return Color::zero();
     }
+
+    let mut rec = HitRecord::default();
+    if world.hit(r, Interval::new(0.001, f64::INFINITY), &mut rec) {
+        let direction = Vec3::random_on_hemisphere(rec.normal);
+        return ray_color(Ray::new(rec.point, direction), depth - 1, world) * 0.5;
+    }
+
+    let unit_direction = r.direction().unit_vector();
+    let t = 0.5 * (unit_direction.y() + 1.0);
+    Color::new(1.0, 1.0, 1.0) * (1.0 - t) + Color::new(0.5, 0.7, 1.0) * t
 }
