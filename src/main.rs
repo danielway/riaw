@@ -26,6 +26,7 @@ fn main() {
     world.add(sphere::Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(sphere::Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, material_center));
     world.add(sphere::Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(sphere::Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.4, material_left));
     world.add(sphere::Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, material_right));
 
     let camera = Camera::new(16.0 / 9.0, 400, 100, 50);
