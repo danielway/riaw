@@ -7,6 +7,7 @@ use crate::vec3::Vec3;
 pub enum Material {
     Lambertian(Color),
     Metal(Color, f64),
+    Dielectric(f64),
 }
 
 impl Material {
@@ -35,6 +36,35 @@ impl Material {
                 *attenuation = *albedo;
                 scattered.direction().dot(rec.normal) > 0.0
             }
+            Material::Dielectric(ir) => {
+                *attenuation = Color::new(1.0, 1.0, 1.0);
+                let refraction_ratio = if rec.front_face {
+                    1.0 / *ir
+                } else {
+                    *ir
+                };
+
+                let unit_direction = r_in.direction().unit_vector();
+                let cos_theta = (-unit_direction).dot(rec.normal).min(1.0);
+                let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
+
+                let cannot_refract = refraction_ratio * sin_theta > 1.0;
+                let direction = if cannot_refract || reflectance(cos_theta, refraction_ratio) > rand::random() {
+                    unit_direction.reflect(rec.normal)
+                } else {
+                    unit_direction.refract(rec.normal, refraction_ratio)
+                };
+
+                *scattered = Ray::new(rec.point, direction);
+                true
+            }
         }
     }
+}
+
+fn reflectance(cosine: f64, ref_idx: f64) -> f64 {
+    let mut r0 = (1.0 - ref_idx) / (1.0 + ref_idx);
+    r0 = r0.powf(2.0);
+
+    r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
 }
