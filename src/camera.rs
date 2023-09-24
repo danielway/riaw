@@ -38,10 +38,8 @@ impl Camera {
         let viewport_width = (image_width as f64 / image_height as f64) * viewport_height;
 
         let w = (look_from - look_to).unit_vector();
-
-        // todo: these (-1,1,1) and (1,-1,1) should not be needed
-        let u = vup.cross(w).unit_vector() * Vec3::new(-1.0, 1.0, 1.0);
-        let v = w.cross(u) * Vec3::new(1.0, -1.0, 1.0);
+        let u = vup.cross(w).unit_vector();
+        let v = w.cross(u);
 
         let viewport_u = u * viewport_width;
         let viewport_v = -v * viewport_height;
@@ -50,7 +48,7 @@ impl Camera {
         let pixel_delta_v = viewport_v / image_height;
 
         let viewport_upper_left = center
-            - Vec3::new(0.0, 0.0, focal_length)
+            - (w * focal_length)
             - viewport_u / 2.0
             - viewport_v / 2.0;
 
